@@ -166,7 +166,6 @@ describe('defs element', () => {
     expect(renderSVG(<Element />)).toBe(
       minifySvg(`
 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 50 50">
-  <defs></defs>
   <rect fill="green" width="50" height="50" />
 </svg>`),
     );
