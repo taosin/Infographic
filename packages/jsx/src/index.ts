@@ -1,8 +1,26 @@
 export { Defs, Ellipse, Group, Path, Rect, Text } from './components';
-export { Fragment, jsx, jsxDEV, jsxs, createFragment } from './jsx-runtime';
+export { Fragment, createFragment, jsx, jsxDEV, jsxs } from './jsx-runtime';
 export { createLayout } from './layout';
 export { renderSVG } from './renderer';
-export type * from './types';
+export type {
+  BaseGeometryProps,
+  Bounds,
+  ComponentType,
+  DefsProps,
+  EllipseProps,
+  FragmentProps,
+  GroupProps,
+  JSXElement,
+  JSXElementConstructor,
+  JSXNode,
+  PathProps,
+  RectProps,
+  RenderContext,
+  RenderableNode,
+  SVGProps,
+  TextProps,
+  WithChildren,
+} from './types';
 export {
   cloneElement,
   getCombinedBounds,

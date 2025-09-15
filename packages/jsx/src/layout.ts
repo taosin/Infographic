@@ -49,7 +49,7 @@ export function performLayout(
   const children = getRenderableChildrenOf(element).filter((child) => {
     // ignore text nodes
     return typeof child === 'object';
-  });
+  }) as JSXElement[];
 
   return layoutFn(children, element.props, context);
 }
