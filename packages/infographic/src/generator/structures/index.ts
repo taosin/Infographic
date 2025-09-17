@@ -1,3 +1,3 @@
-export type { ListColumnProps } from './list-column';
-export { getStructure, registerStructure } from './registration';
+export * from './list-column';
+export * from './registration';
 export type * from './types';

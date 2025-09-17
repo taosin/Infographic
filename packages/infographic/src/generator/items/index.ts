@@ -1,4 +1,4 @@
-export type { DoneListProps } from './DoneList';
-export { getItem, registerItem } from './registration';
-export type { SimpleItemProps } from './SimpleItem';
+export * from './DoneList';
+export * from './registration';
+export type * from './SimpleItem';
 export type * from './types';
