@@ -115,7 +115,7 @@ function getTextStyle(attributes: TextAttributes) {
   const style: Record<string, any> = {
     color: fill,
     overflow: 'visible',
-    userSelect: 'none',
+    // userSelect: 'none',
   };
 
   Object.entries(restAttrs).forEach(([key, value]) => {
