@@ -17,8 +17,9 @@ import { getItemId, getItemProps } from './utils';
 
 export interface PyramidProps extends BaseItemProps {
   gap?: number;
-  iconSize?: number;
   width?: number;
+  height?: number;
+  iconSize?: number;
   pyramidWidth?: number;
 }
 
@@ -28,15 +29,21 @@ export const Pyramid: ComponentType<PyramidProps> = (props) => {
       datum,
       data,
       indexes,
+      gap = 5,
       width = 300,
       height = 60,
-      gap = 5,
       iconSize = 30,
       pyramidWidth = width / 2,
       themeColors,
     },
     restProps,
-  ] = getItemProps(props, ['gap', 'iconSize', 'width', 'pyramidWidth']);
+  ] = getItemProps(props, [
+    'gap',
+    'width',
+    'height',
+    'iconSize',
+    'pyramidWidth',
+  ]);
 
   const radius = 5;
   const { points, topWidth, bottomWidth } = calculateTriangleSegment(
@@ -65,13 +72,14 @@ export const Pyramid: ComponentType<PyramidProps> = (props) => {
   const iconY = height / 2 - iconSize / 2 + (isFirst ? 10 : 0);
   const labelX = rightCenterX;
   const descX = rightBottomX;
-  const descWidth = width - pyramidWidth - 40;
+  const textWidth = width - pyramidWidth - 40;
 
   const itemLabelContent = (
     <ItemLabel
       indexes={indexes}
       x={labelX}
-      y={5}
+      y={10}
+      width={textWidth}
       fontSize={14}
       fill={themeColors.colorPrimary}
     >
@@ -128,7 +136,7 @@ export const Pyramid: ComponentType<PyramidProps> = (props) => {
           indexes={indexes}
           x={descX}
           y={descY}
-          width={descWidth}
+          width={textWidth}
           lineHeight={1}
           lineNumber={1}
           fill={themeColors.colorTextSecondary}
