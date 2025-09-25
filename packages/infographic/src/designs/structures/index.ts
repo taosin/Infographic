@@ -1,3 +1,4 @@
+export * from './compare-hierarchy-left-right';
 export * from './compare-left-right';
 export * from './compare-mirror';
 export * from './hierarchy-pyramid';
