@@ -2,7 +2,6 @@
 import type { ComponentType, JSXElement } from '@antv/infographic-jsx';
 import { getElementBounds, Group } from '@antv/infographic-jsx';
 import { BtnAdd, BtnRemove, BtnsGroup, ItemsGroup } from '../components';
-import { BaseItemProps } from '../items';
 import { FlexLayout } from '../layouts';
 import { registerStructure } from './registry';
 import type { BaseStructureProps } from './types';
@@ -11,12 +10,11 @@ export interface CompareMirrorProps extends BaseStructureProps {
   /** 同侧数据项上下间隔 */
   gap?: number;
   /** 左右两侧间隔 */
-  spacing?: number;
-  RootItem?: ComponentType<Omit<BaseItemProps, 'themeColors'>>;
+  groupGap?: number;
 }
 
 export const CompareMirror: ComponentType<CompareMirrorProps> = (props) => {
-  const { Title, Item, data, gap = 20, spacing = 60 } = props;
+  const { Title, Item, data, gap = 20, groupGap = 60 } = props;
   const { title, desc, items = [] } = data;
 
   const titleContent = Title ? <Title title={title} desc={desc} /> : null;
@@ -33,7 +31,7 @@ export const CompareMirror: ComponentType<CompareMirrorProps> = (props) => {
   const rightItems = items.filter((_, index) => index % 2 === 1);
 
   const leftX = 0;
-  const rightX = itemBounds.width + spacing;
+  const rightX = itemBounds.width + groupGap;
 
   leftItems.forEach((item, index) => {
     const itemY = index * (itemBounds.height + gap);

@@ -9,20 +9,11 @@ import type { BaseStructureProps } from './types';
 export interface ListWaterfallProps extends BaseStructureProps {
   columns?: number;
   gap?: number;
-  stepHeight?: number;
-  randomOffset?: number;
+  stepOffset?: number;
 }
 
 export const ListWaterfall: ComponentType<ListWaterfallProps> = (props) => {
-  const {
-    Title,
-    Item,
-    data,
-    columns = 4,
-    gap = 20,
-    stepHeight = 40,
-    randomOffset = 20,
-  } = props;
+  const { Title, Item, data, columns = 4, gap = 20, stepOffset = 40 } = props;
   const { title, desc, items = [] } = data;
 
   const titleContent = Title ? <Title title={title} desc={desc} /> : null;
@@ -44,12 +35,9 @@ export const ListWaterfall: ComponentType<ListWaterfallProps> = (props) => {
     const itemX = col * colWidth;
 
     const baseY = row * (itemBounds.height + gap);
-    const columnStepOffset = col * stepHeight;
+    const columnStepOffset = col * stepOffset;
 
-    const pseudoRandomSeed = (index * 47 + col * 23) % 100;
-    const randomVariation = (pseudoRandomSeed / 100 - 0.5) * randomOffset;
-
-    const itemY = baseY + columnStepOffset + randomVariation;
+    const itemY = baseY + columnStepOffset;
 
     const indexes = [index];
 
@@ -79,10 +67,8 @@ export const ListWaterfall: ComponentType<ListWaterfallProps> = (props) => {
 
     const itemX = col * colWidth;
     const baseY = row * (itemBounds.height + gap);
-    const columnStepOffset = col * stepHeight;
-    const pseudoRandomSeed = (index * 47 + col * 23) % 100;
-    const randomVariation = (pseudoRandomSeed / 100 - 0.5) * randomOffset;
-    const itemY = baseY + columnStepOffset + randomVariation;
+    const columnStepOffset = col * stepOffset;
+    const itemY = baseY + columnStepOffset;
 
     if (index === 0) {
       btnElements.push(

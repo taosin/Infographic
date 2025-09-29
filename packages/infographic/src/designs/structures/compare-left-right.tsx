@@ -9,13 +9,13 @@ import type { BaseStructureProps } from './types';
 
 export interface CompareLeftRightProps extends BaseStructureProps {
   gap?: number;
-  centerGap?: number;
+  groupGap?: number;
 }
 
 export const CompareLeftRight: ComponentType<CompareLeftRightProps> = (
   props,
 ) => {
-  const { Title, Item, data, gap = 20, centerGap = 80, options } = props;
+  const { Title, Item, data, gap = 20, groupGap = 80, options } = props;
   const { title, desc, items = [] } = data;
 
   const titleContent = Title ? <Title title={title} desc={desc} /> : null;
@@ -33,7 +33,7 @@ export const CompareLeftRight: ComponentType<CompareLeftRightProps> = (
   const maxItems = Math.max(leftItems.length, rightItems.length);
 
   const leftX = 0;
-  const rightX = itemBounds.width + centerGap;
+  const rightX = itemBounds.width + groupGap;
   const totalHeight = maxItems * (itemBounds.height + gap) - gap;
 
   leftItems.forEach((item, index) => {
@@ -125,7 +125,7 @@ export const CompareLeftRight: ComponentType<CompareLeftRightProps> = (
     );
   }
 
-  const dividerPath = `M ${leftX + itemBounds.width + centerGap / 2} 0 L ${leftX + itemBounds.width + centerGap / 2} ${totalHeight}`;
+  const dividerPath = `M ${leftX + itemBounds.width + groupGap / 2} 0 L ${leftX + itemBounds.width + groupGap / 2} ${totalHeight}`;
 
   return (
     <FlexLayout
