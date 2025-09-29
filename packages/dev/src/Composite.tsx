@@ -66,10 +66,9 @@ export const Composite = () => {
     const value: InfographicOptions = {
       padding: 20,
       design: {
-        // title: 'default',
+        title: 'default',
         structure: {
           type: structure,
-          gap: 0,
         },
         items: [{ type: item }, 'pill-badge'],
       },
