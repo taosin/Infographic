@@ -14,6 +14,7 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '指南', link: '/guide/getting-started' },
+      { text: '理论', link: '/theory/' },
       { text: 'API', link: '/api/' },
       { text: '示例', link: '/examples/' },
     ],
@@ -62,6 +63,13 @@ export default defineConfig({
           text: '示例',
           items: [{ text: '示例总览', link: '/examples/' }],
         },
+      ],
+      '/theory/': [
+        { text: '基本概念', link: '/theory/' },
+        { text: '信息图分类', link: '/theory/classification' },
+        { text: '核心理论', link: '/theory/core-theory' },
+        { text: '构成要素', link: '/theory/elements' },
+        { text: '信息图设计', link: '/theory/design' },
       ],
     },
 
