@@ -45,6 +45,8 @@ const config: Config = {
     },
   ],
 
+  plugins: ['./docusaurus.plugin.js'],
+
   presets: [
     [
       'classic',
@@ -107,15 +109,17 @@ const config: Config = {
           label: '开发',
         },
         {
-          href: 'https://github.com/antvis/infographic',
-          label: 'GitHub',
+          label: '企业版',
+          href: 'https://www.tbox.cn/infographic',
           position: 'right',
         },
+        {
+          href: 'https://github.com/antvis/infographic',
+          position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
+        },
       ],
-    },
-    footer: {
-      style: 'dark',
-      copyright: `基于 MIT 许可证发布 | Copyright © ${new Date().getFullYear()} AntV`,
     },
     prism: {
       theme: prismThemes.github,

@@ -1,3 +1,4 @@
+export * from './chart-column';
 export * from './compare-hierarchy-left-right';
 export * from './compare-hierarchy-row';
 export * from './compare-left-right';
@@ -20,6 +21,7 @@ export * from './sequence-circular';
 export * from './sequence-color-snake-steps';
 export * from './sequence-cylinders-3d';
 export * from './sequence-horizontal-zigzag';
+export * from './sequence-pyramid';
 export * from './sequence-roadmap-vertical';
 export * from './sequence-snake-steps';
 export * from './sequence-steps';
