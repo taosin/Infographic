@@ -169,34 +169,22 @@ onBeforeUnmount(() => {
 </script>
 ```
 
-### 在 Node.js 中使用（非浏览器中渲染） {#在-node-js-中使用-非浏览器中渲染}
+### 服务端渲染 {#服务端渲染}
 
-在 Node.js 环境中（如 SSR，以及给AI用的MCP、SKILLs等），可以使用 `ssr` 模块将信息图渲染为 SVG 字符串：
+通过 `@antv/infographic/ssr` 提供的 `renderToString` 方法，可以在非浏览器环境下渲染信息图并输出 SVG 字符串：
 
-```ts
-import { renderToSVG } from '@antv/infographic/ssr';
+```js
+import { renderToString } from '@antv/infographic/ssr';
 
-async function renderInfographic() {
-  const result = await renderToSVG({
-    input: `
-infographic list-row-simple-horizontal-arrow
+const syntax = `infographic list-row-simple-horizontal-arrow
 data
-  items:
-    - label: 步骤 1
-      desc: 开始
-    - label: 步骤 2
-      desc: 进行中
-    - label: 步骤 3
-      desc: 完成
-`,
-  });
+  items
+    - label 步骤 1
+      desc 开始
+    - label 步骤 2
+      desc 进行中
+    - label 步骤 3
+      desc 完成`;
 
-  console.log(result.svg);
-  console.log('Errors:', result.errors);
-  console.log('Warnings:', result.warnings);
-}
-
-renderInfographic();
+const svg = await renderToString(syntax);
 ```
-
-详见 [Non-Browser Rendering](/reference/non-browser-rendering)。

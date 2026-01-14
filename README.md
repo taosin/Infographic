@@ -109,30 +109,6 @@ for (const chunk of chunks) {
 
 <img src="https://mdn.alipayobjects.com/huamei_qa8qxu/afts/img/A*e_PFSZrR9AQAAAAASdAAAAgAemJ7AQ/original" width="480" alt="AntV Infographic Streaming Rendering">
 
-## Non-Browser Rendering
-
-Render infographics to SVG strings in Node.js environment (SSR, etc.).
-
-```ts
-import { renderToSVG } from '@antv/infographic/ssr';
-
-const result = await renderToSVG({
-  input: `
-infographic list-row-simple-horizontal-arrow
-data
-  items:
-    - label: Step 1
-      desc: Start
-    - label: Step 2
-      desc: In Progress
-    - label: Step 3
-      desc: Complete
-`,
-});
-
-console.log(result.svg);
-```
-
 ## 🔧 Skills Integration
 
 AntV Infographic provides skills to integrate with AI agents:
