@@ -1,4 +1,4 @@
-import { measureText as measure, registerFont as registerFontInMeasury } from 'measury';
+import { measureText as measure, registerFont } from 'measury';
 import AlibabaPuHuiTi from 'measury/fonts/AlibabaPuHuiTi-Regular';
 import { JSXNode, TextProps } from '../jsx';
 import { DEFAULT_FONT } from '../renderer';
@@ -13,7 +13,7 @@ export const setFontExtendFactor = (factor: number) => {
 };
 
 if (isNode) {
-  registerFontInMeasury(AlibabaPuHuiTi);
+  registerFont(AlibabaPuHuiTi);
 }
 
 let canvasContext: CanvasRenderingContext2D | null = null;
@@ -132,6 +132,7 @@ export function measureText(
   const metrics = isBrowser()
     ? (measureTextInBrowser(content, options) ?? fallback())
     : fallback();
+
   // 额外添加 1% 宽高
   return {
     width: Math.ceil(metrics.width * FONT_EXTEND_FACTOR),

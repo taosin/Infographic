@@ -3,7 +3,6 @@ import {
   trackSvgLoadPromise,
 } from '../../resource/load-tracker';
 import { join, normalizeFontWeightName, splitFontFamily } from '../../utils';
-import { isNode } from '../../utils/is-node';
 import { getFont, getFonts } from './registry';
 
 export function getFontURLs(font: string): string[] {
@@ -141,13 +140,6 @@ export function loadFont(svg: SVGSVGElement, font: string) {
 }
 
 export function loadFonts(svg: SVGSVGElement) {
-  // SSR environment: skip font loading
-  // Check both isNode and SSR flag to avoid affecting tests
-  const isSSRMode = isNode && (global as any).__ANTV_INFOGRAPHIC_SSR__;
-  if (isSSRMode) {
-    return;
-  }
-
   const fonts = getFonts();
   fonts.forEach((font) => loadFont(svg, font.fontFamily));
 }
