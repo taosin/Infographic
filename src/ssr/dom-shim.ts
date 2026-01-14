@@ -1,29 +1,17 @@
-import { parseHTML, DOMParser, Document } from 'linkedom';
+import { DOMParser, parseHTML } from 'linkedom';
 
-let globalDoc: Document | null = null;
-let globalWin: any = null;
+export function setupDOM(): { window: Window; document: Document } {
+  const { document, window } = parseHTML(
+    '<!DOCTYPE html><html><body><div id="container"></div></body></html>',
+  );
 
-let isSSRMode = false;
+  Object.assign(globalThis, {
+    window,
+    document,
+    DOMParser,
+  });
 
-export function isSSR(): boolean {
-  return isSSRMode;
-}
-
-export function setupDOM(): { window: any; document: Document } {
-  if (globalDoc && globalWin) return { window: globalWin, document: globalDoc };
-
-  isSSRMode = true;
-
-  const { document, window } = parseHTML('<!DOCTYPE html><html><body><div id="container"></div></body></html>');
-
-  globalDoc = document;
-  globalWin = window;
-
-  (global as any).window = window;
-  (global as any).document = document;
-  (global as any).DOMParser = DOMParser;
-
-  const domClasses = [
+  const classes = [
     'HTMLElement',
     'HTMLDivElement',
     'HTMLSpanElement',
@@ -39,12 +27,7 @@ export function setupDOM(): { window: any; document: Document } {
     'Document',
     'XMLSerializer',
     'MutationObserver',
-  ];
-  domClasses.forEach((name) => {
-    if ((window as any)[name]) (global as any)[name] = (window as any)[name];
-  });
-
-  const svgClasses = [
+    // SVG
     'SVGElement',
     'SVGSVGElement',
     'SVGGraphicsElement',
@@ -67,9 +50,11 @@ export function setupDOM(): { window: any; document: Document } {
     'SVGPatternElement',
     'SVGMaskElement',
     'SVGForeignObjectElement',
+    'Image',
   ];
-  svgClasses.forEach((name) => {
-    if ((window as any)[name]) (global as any)[name] = (window as any)[name];
+  classes.forEach((name) => {
+    if ((window as any)[name])
+      (globalThis as any)[name] = (window as any)[name];
   });
 
   if (!(document as any).fonts) {
@@ -80,7 +65,8 @@ export function setupDOM(): { window: any; document: Document } {
         delete: (font: unknown) => fontSet.delete(font),
         has: (font: unknown) => fontSet.has(font),
         clear: () => fontSet.clear(),
-        forEach: (callback: (font: unknown) => void) => fontSet.forEach(callback),
+        forEach: (callback: (font: unknown) => void) =>
+          fontSet.forEach(callback),
         entries: () => fontSet.entries(),
         keys: () => fontSet.keys(),
         values: () => fontSet.values(),
@@ -107,11 +93,27 @@ export function setupDOM(): { window: any; document: Document } {
     });
   }
 
-  (globalThis as any).__ANTV_INFOGRAPHIC_SSR__ = true;
+  const rafIds = new Map<number, NodeJS.Immediate>();
+  let nextRafId = 0;
 
-  (globalThis as any).requestAnimationFrame = (cb: any) => {
-    setImmediate(cb);
-    return 0;
+  (globalThis as any).requestAnimationFrame = (
+    cb: (time: number) => void,
+  ): number => {
+    const id = ++nextRafId;
+    const immediate = setImmediate(() => {
+      rafIds.delete(id);
+      cb(performance.now());
+    });
+    rafIds.set(id, immediate);
+    return id;
+  };
+
+  (globalThis as any).cancelAnimationFrame = (id: number) => {
+    const immediate = rafIds.get(id);
+    if (immediate) {
+      clearImmediate(immediate);
+      rafIds.delete(id);
+    }
   };
 
   return { window, document };

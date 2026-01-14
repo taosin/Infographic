@@ -54,19 +54,6 @@ async function getResource(
 const RESOURCE_MAP = new Map<string, Resource>();
 const RESOURCE_LOAD_MAP = new WeakMap<SVGSVGElement, Map<string, SVGElement>>();
 
-export async function preloadResource(
-  scene: ResourceScene,
-  config: string | ResourceConfig,
-): Promise<void> {
-  const cfg = parseResourceConfig(config);
-  if (!cfg) return;
-  const id = getResourceId(cfg)!;
-
-  if (!RESOURCE_MAP.has(id)) {
-    const resource = await getResource(scene, cfg).catch(() => null);
-    if (resource) RESOURCE_MAP.set(id, resource);
-  }
-}
 /**
  * load resource into svg defs
  * @returns resource ref id
@@ -121,7 +108,9 @@ function getFallbackQuery(
 ): string {
   const defaultQuery = scene === 'illus' ? 'illustration' : 'icon';
   const datumQuery =
-    normalizeQuery(datum?.label) || normalizeQuery(datum?.desc);
+    normalizeQuery(cfg.data) ||
+    normalizeQuery(datum?.label) ||
+    normalizeQuery(datum?.desc);
   if (datumQuery) return datumQuery;
 
   const data = normalizeQuery(cfg.data);

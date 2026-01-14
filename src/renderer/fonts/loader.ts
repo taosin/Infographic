@@ -2,7 +2,12 @@ import {
   getSvgLoadPromise,
   trackSvgLoadPromise,
 } from '../../resource/load-tracker';
-import { join, normalizeFontWeightName, splitFontFamily } from '../../utils';
+import {
+  isNode,
+  join,
+  normalizeFontWeightName,
+  splitFontFamily,
+} from '../../utils';
 import { getFont, getFonts } from './registry';
 
 export function getFontURLs(font: string): string[] {
@@ -140,6 +145,7 @@ export function loadFont(svg: SVGSVGElement, font: string) {
 }
 
 export function loadFonts(svg: SVGSVGElement) {
+  if (isNode) return;
   const fonts = getFonts();
   fonts.forEach((font) => loadFont(svg, font.fontFamily));
 }
