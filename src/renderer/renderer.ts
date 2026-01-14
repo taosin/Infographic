@@ -19,6 +19,7 @@ import {
   setAttributes,
   setSVGPadding,
 } from '../utils';
+import { isNode } from '../utils/is-node';
 import {
   renderBackground,
   renderBaseElement,
@@ -48,7 +49,7 @@ export class Renderer implements IRenderer {
   constructor(
     private options: ParsedInfographicOptions,
     private template: SVGSVGElement,
-  ) {}
+  ) { }
 
   public getOptions(): ParsedInfographicOptions {
     return this.options;
@@ -59,40 +60,44 @@ export class Renderer implements IRenderer {
   }
 
   render(): SVGSVGElement {
+    const isSSRMode = isNode && (global as any).__ANTV_INFOGRAPHIC_SSR__;
+
     const svg = this.getSVG();
     if (this.rendered) return svg;
 
     renderTemplate(svg, this.options);
-    svg.style.visibility = 'hidden';
-    const postRender = () => {
-      setView(this.template, this.options);
-      loadFonts(this.template);
-      svg.style.visibility = '';
-    };
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node === svg || node.contains(svg)) {
-            // post render
-            postRender();
+    if (isSSRMode) {
+      setView(svg, this.options);
+      loadFonts(svg);
+    } else {
+      svg.style.visibility = 'hidden';
+      const postRender = () => {
+        setView(this.template, this.options);
+        loadFonts(this.template);
+        svg.style.visibility = '';
+      };
 
-            // disconnect observer
-            observer.disconnect();
-          }
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node === svg || node.contains(svg)) {
+              postRender();
+              observer.disconnect();
+            }
+          });
         });
       });
-    });
 
-    try {
-      observer.observe(document, {
-        childList: true,
-        subtree: true,
-      });
-    } catch (error) {
-      // Fallback for micro-app environments that proxy document.
-      postRender();
-      console.error(error);
+      try {
+        observer.observe(document, {
+          childList: true,
+          subtree: true,
+        });
+      } catch (error) {
+        postRender();
+        console.error(error);
+      }
     }
 
     this.rendered = true;
@@ -114,7 +119,6 @@ function fill(svg: SVGSVGElement, options: ParsedInfographicOptions) {
   renderBaseElement(svg, themeConfig.base?.global);
 
   const elements = svg.querySelectorAll<SVGElement>(`[data-element-type]`);
-
   elements.forEach((element) => {
     const id = element.id || '';
     if (isTitle(element)) {

@@ -70,7 +70,6 @@ export class Infographic {
     this.parsedOptions = parseOptions(
       mergeOptions(DEFAULT_OPTIONS, this.options),
     );
-
     if (warnings.length) {
       this.emitter.emit('warning', warnings);
     }
@@ -102,7 +101,6 @@ export class Infographic {
       this.emitter.emit('error', new Error('Incomplete options'));
       return;
     }
-
     const { container } = this.parsedOptions;
     const template = this.compose(parsedOptions);
     const renderer = new Renderer(parsedOptions, template);
@@ -115,7 +113,7 @@ export class Infographic {
     }
 
     this.rendered = true;
-    this.emitter.emit('rendered', { node: this.node, options: this.options });
+    this.emitter.emit('rendered', { node: this.node, options: this.options, data: parsedOptions.data });
     const currentNode = this.node;
     if (currentNode) {
       void waitForSvgLoads(currentNode).then(() => {
