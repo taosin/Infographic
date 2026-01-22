@@ -416,7 +416,7 @@ describe('ZoomWheel interaction', () => {
       instance.destroy();
     });
 
-    it('handles zero deltaY (no zoom)', () => {
+    it('does not zoom when deltaY is zero (no scrolling)', () => {
       const svg = createSVG(100, 50);
       const commander = { execute: vi.fn() } as any;
       const interaction = { isActive: vi.fn(() => true) } as any;
@@ -434,15 +434,12 @@ describe('ZoomWheel interaction', () => {
       });
 
       const event = new WheelEvent('wheel', { deltaY: 0, ctrlKey: true });
+      const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
       document.dispatchEvent(event);
 
-      // deltaY === 0 means isZoomIn = false, so it zooms out
-      expect(commander.execute).toHaveBeenCalledTimes(1);
-      const command = commander.execute.mock.calls[0][0] as UpdateOptionsCommand;
-      // 20 * 0.9 = 18
-      expect(command.serialize().options).toEqual({
-        padding: [18, 18, 18, 18],
-      });
+      // deltaY === 0 means no actual scrolling, so no zoom should occur
+      expect(preventDefaultSpy).not.toHaveBeenCalled();
+      expect(commander.execute).not.toHaveBeenCalled();
 
       instance.destroy();
     });

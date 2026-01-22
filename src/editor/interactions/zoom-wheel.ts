@@ -20,6 +20,8 @@ export class ZoomWheel extends Interaction implements IInteraction {
   private wheelListener = (event: WheelEvent) => {
     if (!this.interaction.isActive()) return;
     if (!event.ctrlKey && !event.metaKey) return;
+    // Ignore events with zero deltaY (no actual scrolling)
+    if (event.deltaY === 0) return;
     event.preventDefault();
 
     const isZoomIn = event.deltaY > 0;
@@ -35,14 +37,13 @@ export class ZoomWheel extends Interaction implements IInteraction {
       // This provides a more intuitive zooming experience:
       // - Zoom in: start from a positive initial value (adds padding)
       // - Zoom out: start from a negative initial value (reduces viewbox)
-      if (value === 0) {
-        const initialValue = isZoomIn
-          ? INITIAL_PADDING_WHEN_ZERO
-          : -INITIAL_PADDING_WHEN_ZERO;
-        return clamp(initialValue * factor, MIN_PADDING, MAX_PADDING);
-      }
-      // For non-zero padding, apply the factor directly
-      return clamp(value * factor, MIN_PADDING, MAX_PADDING);
+      const baseValue =
+        value === 0
+          ? isZoomIn
+            ? INITIAL_PADDING_WHEN_ZERO
+            : -INITIAL_PADDING_WHEN_ZERO
+          : value;
+      return clamp(baseValue * factor, MIN_PADDING, MAX_PADDING);
     });
 
     const [top, right, bottom, left] = scaled;
