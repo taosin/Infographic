@@ -5,7 +5,7 @@ import {
   ItemDatum,
   renderSVG,
 } from '@antv/infographic';
-import { Card, Form, Select } from 'antd';
+import { Card, ColorPicker, Form, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { getStoredValues, setStoredValues } from './utils/storage';
 
@@ -26,6 +26,7 @@ export const ItemPreview = () => {
   const storedValues = getStoredValues<{
     selectedItem: string;
     theme: 'light' | 'dark';
+    colorPrimary: string;
   }>(STORAGE_KEY, (stored) => {
     const fallbacks: any = {};
 
@@ -39,18 +40,23 @@ export const ItemPreview = () => {
 
   const initialItem = storedValues?.selectedItem || items[0];
   const initialTheme = storedValues?.theme || 'light';
+  const initialColorPrimary = storedValues?.colorPrimary || '#FF356A';
 
   const [selectedItem, setSelectedItem] = useState(initialItem);
   const [theme, setTheme] = useState<'light' | 'dark'>(initialTheme);
   const [themeConfig, setThemeConfig] = useState({
-    colorPrimary: '#FF356A',
+    colorPrimary: initialColorPrimary,
     colorBg: initialTheme === 'dark' ? '#333' : '#fff',
   });
 
   // Save to localStorage when values change
   useEffect(() => {
-    setStoredValues(STORAGE_KEY, { selectedItem, theme });
-  }, [selectedItem, theme]);
+    setStoredValues(STORAGE_KEY, {
+      selectedItem,
+      theme,
+      colorPrimary: themeConfig.colorPrimary,
+    });
+  }, [selectedItem, theme, themeConfig.colorPrimary]);
 
   const variants: { title: string; datum: ItemDatum; props?: any }[] = [
     {
@@ -208,6 +214,18 @@ export const ItemPreview = () => {
                   setThemeConfig((pre) => ({
                     ...pre,
                     colorBg: newTheme === 'dark' ? '#333' : '#fff',
+                  }));
+                }}
+              />
+            </Form.Item>
+            <Form.Item label="主色">
+              <ColorPicker
+                value={themeConfig.colorPrimary}
+                onChange={(color) => {
+                  const hexColor = color.toHexString();
+                  setThemeConfig((pre) => ({
+                    ...pre,
+                    colorPrimary: hexColor,
                   }));
                 }}
               />
