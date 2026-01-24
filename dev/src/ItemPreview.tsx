@@ -221,8 +221,7 @@ export const ItemPreview = () => {
             <Form.Item label="主色">
               <ColorPicker
                 value={themeConfig.colorPrimary}
-                onChange={(color) => {
-                  const hexColor = color.toHexString();
+                onChange={(_, hexColor) => {
                   setThemeConfig((pre) => ({
                     ...pre,
                     colorPrimary: hexColor,
