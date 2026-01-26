@@ -21,6 +21,7 @@ import {
   getPaletteFromSyntax,
   updatePaletteInSyntax,
 } from './syntaxManager';
+import {replaceTemplateLine} from './templateManager';
 
 const CATEGORY_STORAGE_KEY = 'live-editor-category-data';
 type TemplateCategory =
@@ -314,28 +315,6 @@ const replaceDataBlock = (syntax: string, nextDataBlock: string) => {
     lines.splice(insertIndex, 0, ...blockLines);
   }
   return lines.join('\n');
-};
-
-const replaceTemplateLine = (syntax: string, template: string) => {
-  const trimmed = syntax.trim();
-  if (!trimmed) return `infographic ${template}`;
-  const lines = syntax.split('\n');
-  const templateLineIndex = lines.findIndex((line) => {
-    const trimmedLine = line.trim();
-    return (
-      trimmedLine.startsWith('infographic ') ||
-      trimmedLine.startsWith('template ')
-    );
-  });
-  if (templateLineIndex >= 0) {
-    const indent = lines[templateLineIndex].match(/^\s*/)?.[0] || '';
-    const keyword = lines[templateLineIndex].trim().startsWith('template ')
-      ? 'template'
-      : 'infographic';
-    lines[templateLineIndex] = `${indent}${keyword} ${template}`;
-    return lines.join('\n');
-  }
-  return `infographic ${template}\n${syntax}`;
 };
 
 const TRANSLATIONS = {
