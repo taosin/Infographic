@@ -4,13 +4,7 @@ import type {
   UpdatableInfographicOptions,
 } from '../../options';
 import type { Element, IEventEmitter, ItemDatum } from '../../types';
-import {
-  getDatumByIndexes,
-  getElementRole,
-  isIconElement,
-  parsePadding,
-  setSVGPadding,
-} from '../../utils';
+import { getDatumByIndexes, getElementRole, isIconElement } from '../../utils';
 import type {
   ElementProps,
   ICommandManager,
@@ -118,15 +112,21 @@ export class StateManager implements IStateManager {
 
   updateOptions(options: UpdatableInfographicOptions) {
     applyOptionUpdates(this.options, options);
-    if (this.options.viewBox) {
-      this.editor.getDocument().setAttribute('viewBox', this.options.viewBox);
-    } else {
-      this.editor.getDocument().removeAttribute('viewBox');
-      setSVGPadding(
-        this.editor.getDocument(),
-        parsePadding(this.options.padding),
-      );
+
+    if ('viewBox' in options) {
+      this.emitter.emit('viewBox:change', {
+        type: 'viewBox:change',
+        viewBox: this.options.viewBox,
+      });
     }
+
+    if ('padding' in options) {
+      this.emitter.emit('padding:change', {
+        type: 'padding:change',
+        padding: this.options.padding,
+      });
+    }
+
     this.emitter.emit('options:change', {
       type: 'options:change',
       changes: [
